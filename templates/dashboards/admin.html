@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Admin dashboard - MendMate{% endblock %}
+{% block content %}
+<h1>Admin dashboard</h1>
+<p class="muted">Overview of MendMate users.</p>
+<div class="grid">
+  <div class="card stat"><span class="stat-number">{{ total_users }}</span><span>Total users</span></div>
+  <div class="card stat"><span class="stat-number">{{ poster_count }}</span><span>Task Posters</span></div>
+  <div class="card stat"><span class="stat-number">{{ helper_count }}</span><span>Helpers</span></div>
+</div>
+<div class="card">
+  <h3>Newest users</h3>
+  <table class="details wide">
+    <tr><th>Username</th><th>Email</th><th>Role</th><th>Joined</th></tr>
+    {% for u in recent_users %}
+      <tr><td>{{ u.username }}</td><td>{{ u.email }}</td><td>{{ u.get_role_display }}</td><td>{{ u.date_joined|date:"M j, Y" }}</td></tr>
+    {% endfor %}
+  </table>
+  <a class="btn btn-small" href="{% url 'admin:accounts_user_changelist' %}">Manage users</a>
+</div>
+{% endblock %}

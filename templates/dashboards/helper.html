@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Helper dashboard - MendMate{% endblock %}
+{% block content %}
+<h1>Hello, {{ user.display_name }}!</h1>
+<p class="muted">Helper dashboard: find tasks near you that match your skills.</p>
+<div class="grid">
+  <div class="card"><h3>Available tasks</h3><p>Browse tasks by skill and area. <small class="muted">(Coming in the next phase)</small></p></div>
+  <div class="card"><h3>My accepted tasks</h3><p>See tasks you agreed to do. <small class="muted">(Coming in the next phase)</small></p></div>
+  <div class="card">
+    <h3>My skills</h3>
+    {% if skills %}
+      <p>{% for s in skills %}<span class="badge">{{ s }}</span> {% endfor %}</p>
+    {% else %}
+      <p>You have not added skills yet.</p>
+    {% endif %}
+    <a class="btn btn-small" href="{% url 'profile_edit' %}">Update skills</a>
+  </div>
+  <div class="card"><h3>My profile</h3><p>Keep your details up to date.</p><a class="btn btn-small" href="{% url 'profile' %}">View profile</a></div>
+</div>
+{% endblock %}
