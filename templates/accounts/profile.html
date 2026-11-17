@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}My profile - MendMate{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="profile-head">
+    {% if profile_user.profile_photo %}
+      <img class="avatar" src="{{ profile_user.profile_photo.url }}" alt="Profile photo">
+    {% else %}
+      <div class="avatar avatar-empty">{{ profile_user.display_name|first|upper }}</div>
+    {% endif %}
+    <div>
+      <h2>{{ profile_user.display_name }}</h2>
+      <span class="badge">{{ profile_user.get_role_display }}</span>
+    </div>
+  </div>
+  <table class="details">
+    <tr><th>Username</th><td>{{ profile_user.username }}</td></tr>
+    <tr><th>Email</th><td>{{ profile_user.email }}</td></tr>
+    <tr><th>Contact number</th><td>{{ profile_user.contact_number|default:"Not set" }}</td></tr>
+    <tr><th>Barangay / area</th><td>{{ profile_user.location_area|default:"Not set" }}</td></tr>
+    {% if profile_user.role == 'helper' %}<tr><th>Skills</th><td>{{ profile_user.skills|default:"Not set" }}</td></tr>{% endif %}
+    <tr><th>About me</th><td>{{ profile_user.bio|default:"Not set"|linebreaksbr }}</td></tr>
+    <tr><th>Member since</th><td>{{ profile_user.date_joined|date:"F j, Y" }}</td></tr>
+  </table>
+  <a class="btn" href="{% url 'profile_edit' %}">Edit profile</a>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Edit profile - MendMate{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h2>Edit profile</h2>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include 'form_fields.html' %}
+    <button type="submit" class="btn">Save changes</button>
+    <a class="btn btn-outline" href="{% url 'profile' %}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

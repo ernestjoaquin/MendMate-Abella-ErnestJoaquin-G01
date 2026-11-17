@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Sign up - MendMate{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h2>Create your account</h2>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'form_fields.html' %}
+    <button type="submit" class="btn btn-block">Sign up</button>
+  </form>
+  <p class="muted">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+</div>
+{% endblock %}
