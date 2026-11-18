@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}{{ task.title }} - MendMate{% endblock %}
+{% block content %}
+<p><a href="{% if user.role == 'helper' and task.helper_id == user.id %}{% url 'my_jobs' %}{% else %}{% url 'task_list' %}{% endif %}">&laquo; Back</a></p>
+<div class="card">
+  <div class="task-card-top">
+    <h1>{{ task.title }}</h1>
+    <span class="status status-{{ task.status }}">{{ task.get_status_display }}</span>
+  </div>
+  <table class="details">
+    <tr><th>Category</th><td>{{ task.category.name }}</td></tr>
+    <tr><th>Budget</th><td>&#8369;{{ task.budget|floatformat:"2g" }}</td></tr>
+    <tr><th>Area</th><td>{{ task.location_area }}</td></tr>
+    <tr><th>Preferred date</th><td>{{ task.preferred_date|date:"F j, Y" }}</td></tr>
+    <tr><th>Posted by</th><td>{{ task.poster.display_name }}{% if user.role == 'admin' or task.helper_id == user.id %}{% if task.poster.contact_number %} &middot; {{ task.poster.contact_number }}{% endif %}{% endif %}</td></tr>
+    {% if task.helper %}
+      <tr><th>Helper</th><td>{{ task.helper.display_name }}{% if user.role == 'admin' or task.poster_id == user.id %}{% if task.helper.contact_number %} &middot; {{ task.helper.contact_number }}{% endif %}{% endif %}</td></tr>
+    {% endif %}
+    <tr><th>Posted</th><td>{{ task.created_at|date:"M j, Y g:i A" }}</td></tr>
+  </table>
+  <h3>Details</h3>
+  <p>{{ task.description|linebreaksbr }}</p>
+
+  <div class="actions">
+    {% if can_accept %}
+      {% if jobs_left > 0 %}
+        <form method="post" action="{% url 'task_accept' task.pk %}" class="inline-form">{% csrf_token %}<button class="btn">Accept this task</button></form>
+        <span class="muted small">You can hold {{ jobs_left }} more active task{{ jobs_left|pluralize }}.</span>
+      {% else %}
+        <span class="alert alert-info">You already have the maximum number of active tasks. Finish one first.</span>
+      {% endif %}
+    {% endif %}
+    {% if can_withdraw %}
+      <form method="post" action="{% url 'task_withdraw' task.pk %}" class="inline-form" onsubmit="return confirm('Withdraw from this task?');">{% csrf_token %}<button class="btn btn-outline">Withdraw</button></form>
+    {% endif %}
+    {% if can_complete %}
+      <form method="post" action="{% url 'task_complete' task.pk %}" class="inline-form" onsubmit="return confirm('Mark this task as completed?');">{% csrf_token %}<button class="btn">Mark as completed</button></form>
+    {% endif %}
+    {% if can_edit %}<a class="btn btn-outline" href="{% url 'task_update' task.pk %}">Edit</a>{% endif %}
+    {% if can_cancel %}
+      <form method="post" action="{% url 'task_cancel' task.pk %}" class="inline-form" onsubmit="return confirm('Cancel this task?');">{% csrf_token %}<button class="btn btn-outline">Cancel task</button></form>
+    {% endif %}
+    {% if can_delete %}<a class="btn btn-danger" href="{% url 'task_delete' task.pk %}">Delete</a>{% endif %}
+  </div>
+</div>
+{% endblock %}

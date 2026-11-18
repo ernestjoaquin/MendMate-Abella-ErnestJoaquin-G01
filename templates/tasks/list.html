@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}{{ heading }} - MendMate{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ heading }}</h1>
+    {% if user.role == 'helper' %}<p class="muted">Open tasks from people nearby. <a href="{% url 'my_jobs' %}">See my accepted tasks</a></p>{% endif %}
+    {% if user.role == 'admin' %}<p class="muted">Every task on MendMate. You can review and remove inappropriate posts.</p>{% endif %}
+  </div>
+  {% if user.role == 'poster' %}<a class="btn" href="{% url 'task_create' %}">+ Post a task</a>{% endif %}
+</div>
+
+<form method="get" class="card filters">
+  <div class="field">{{ filter_form.q.label_tag }}{{ filter_form.q }}</div>
+  <div class="field">{{ filter_form.category.label_tag }}{{ filter_form.category }}</div>
+  {% if user.role != 'helper' %}<div class="field">{{ filter_form.status.label_tag }}{{ filter_form.status }}</div>{% endif %}
+  <div class="filter-actions">
+    <button type="submit" class="btn btn-small">Filter</button>
+    <a class="btn btn-small btn-outline" href="{% url 'task_list' %}">Clear</a>
+  </div>
+</form>
+
+{% for t in page %}
+  {% include 'tasks/_task_card.html' %}
+{% empty %}
+  <div class="card empty">
+    <p>No tasks found.</p>
+    {% if user.role == 'poster' %}<a class="btn btn-small" href="{% url 'task_create' %}">Post your first task</a>{% endif %}
+  </div>
+{% endfor %}
+
+{% if page.has_other_pages %}
+<div class="pagination">
+  {% if page.has_previous %}<a class="btn btn-small btn-outline" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page.previous_page_number }}">&laquo; Previous</a>{% endif %}
+  <span class="muted">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a class="btn btn-small btn-outline" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page.next_page_number }}">Next &raquo;</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

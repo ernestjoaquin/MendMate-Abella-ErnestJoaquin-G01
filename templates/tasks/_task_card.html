@@ -1,0 +1,15 @@
+<div class="card task-card">
+  <div class="task-card-top">
+    <h3><a href="{% url 'task_detail' t.pk %}">{{ t.title }}</a></h3>
+    <span class="status status-{{ t.status }}">{{ t.get_status_display }}</span>
+  </div>
+  <p class="task-meta">
+    <span class="badge">{{ t.category.name }}</span>
+    &#8369;{{ t.budget|floatformat:"2g" }} &middot; {{ t.location_area }} &middot; Needed {{ t.preferred_date|date:"M j, Y" }}
+  </p>
+  <p class="muted small">
+    {% if user.role != 'poster' %}Posted by {{ t.poster.display_name }} &middot; {% endif %}
+    {% if t.helper and user.role != 'helper' %}Helper: {{ t.helper.display_name }} &middot; {% endif %}
+    {{ t.created_at|timesince }} ago
+  </p>
+</div>
