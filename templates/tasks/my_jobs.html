@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}My accepted tasks - MendMate{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>My accepted tasks</h1>
+    <p class="muted">You can hold up to {{ max_jobs }} active tasks at a time.</p>
+  </div>
+  <a class="btn" href="{% url 'task_list' %}">Find more tasks</a>
+</div>
+
+<h2>In progress ({{ active_jobs|length }})</h2>
+{% for t in active_jobs %}
+  {% include 'tasks/_task_card.html' %}
+{% empty %}
+  <div class="card empty"><p>You have no active tasks. <a href="{% url 'task_list' %}">Browse available tasks</a>.</p></div>
+{% endfor %}
+
+<h2>History</h2>
+{% for t in past_jobs %}
+  {% include 'tasks/_task_card.html' %}
+{% empty %}
+  <div class="card empty"><p>Nothing here yet.</p></div>
+{% endfor %}
+{% endblock %}
