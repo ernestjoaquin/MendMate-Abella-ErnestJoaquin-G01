@@ -2,11 +2,36 @@
 {% block title %}Admin dashboard - MendMate{% endblock %}
 {% block content %}
 <h1>Admin dashboard</h1>
-<p class="muted">Overview of MendMate users.</p>
+<p class="muted">Overview of MendMate users and tasks.</p>
 <div class="grid">
   <div class="card stat"><span class="stat-number">{{ total_users }}</span><span>Total users</span></div>
   <div class="card stat"><span class="stat-number">{{ poster_count }}</span><span>Task Posters</span></div>
   <div class="card stat"><span class="stat-number">{{ helper_count }}</span><span>Helpers</span></div>
+</div>
+<div class="grid">
+  <div class="card stat"><span class="stat-number">{{ task_total }}</span><span>All tasks</span></div>
+  <div class="card stat"><span class="stat-number">{{ task_open }}</span><span>Open</span></div>
+  <div class="card stat"><span class="stat-number">{{ task_accepted }}</span><span>In progress</span></div>
+  <div class="card stat"><span class="stat-number">{{ task_completed }}</span><span>Completed</span></div>
+</div>
+<div class="card">
+  <h3>Latest tasks</h3>
+  {% if recent_tasks %}
+  <table class="details wide">
+    <tr><th>Task</th><th>Posted by</th><th>Category</th><th>Status</th></tr>
+    {% for t in recent_tasks %}
+      <tr>
+        <td><a href="{% url 'task_detail' t.pk %}">{{ t.title }}</a></td>
+        <td>{{ t.poster.username }}</td>
+        <td>{{ t.category.name }}</td>
+        <td><span class="status status-{{ t.status }}">{{ t.get_status_display }}</span></td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p class="muted">No tasks have been posted yet.</p>
+  {% endif %}
+  <a class="btn btn-small" href="{% url 'task_list' %}">Manage all tasks</a>
 </div>
 <div class="card">
   <h3>Newest users</h3>
