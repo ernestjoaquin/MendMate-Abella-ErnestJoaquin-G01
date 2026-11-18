@@ -4,9 +4,32 @@
 <h1>Hello, {{ user.display_name }}!</h1>
 <p class="muted">Task Poster dashboard: get help with small tasks from people nearby.</p>
 <div class="grid">
-  <div class="card"><h3>Post a task</h3><p>Describe what you need done. <small class="muted">(Coming in the next phase)</small></p></div>
-  <div class="card"><h3>My tasks</h3><p>Track your posted tasks. <small class="muted">(Coming in the next phase)</small></p></div>
-  <div class="card"><h3>Messages</h3><p>Chat with helpers. <small class="muted">(Coming in the next phase)</small></p></div>
+  <div class="card stat"><span class="stat-number">{{ open_count }}</span><span>Open tasks</span></div>
+  <div class="card stat"><span class="stat-number">{{ accepted_count }}</span><span>In progress</span></div>
+  <div class="card stat"><span class="stat-number">{{ completed_count }}</span><span>Completed</span></div>
+</div>
+<div class="grid">
+  <div class="card"><h3>Post a task</h3><p>Describe what you need done and a helper will pick it up.</p><a class="btn btn-small" href="{% url 'task_create' %}">Post a task</a></div>
+  <div class="card"><h3>My tasks</h3><p>Track, edit, complete or cancel the tasks you posted.</p><a class="btn btn-small" href="{% url 'task_list' %}">View my tasks</a></div>
+  <div class="card"><h3>Messages</h3><p>Chat with helpers. <small class="muted">(Coming in a later phase)</small></p></div>
   <div class="card"><h3>My profile</h3><p>Keep your details up to date.</p><a class="btn btn-small" href="{% url 'profile' %}">View profile</a></div>
+</div>
+<div class="card">
+  <h3>Recent tasks</h3>
+  {% if recent_tasks %}
+  <table class="details wide">
+    <tr><th>Task</th><th>Category</th><th>Status</th><th>Helper</th></tr>
+    {% for t in recent_tasks %}
+      <tr>
+        <td><a href="{% url 'task_detail' t.pk %}">{{ t.title }}</a></td>
+        <td>{{ t.category.name }}</td>
+        <td><span class="status status-{{ t.status }}">{{ t.get_status_display }}</span></td>
+        <td>{{ t.helper.display_name|default:"-" }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p class="muted">You have not posted any task yet.</p>
+  {% endif %}
 </div>
 {% endblock %}
